@@ -1,0 +1,27 @@
+# --- Unreal Engine Generated Files ---
+.vs/
+/Binaries/
+/Build/
+/DerivedDataCache/
+/Intermediate/
+/Saved/
+
+# --- Source Control and IDE Files ---
+*.pdb
+*.opensdf
+*.sdf
+*.suo
+*.user
+*.bak
+*.log
+*.VC.db
+*.sln
+*.vcxproj
+*.vcxproj.filters
+
+# --- Mac OS/Linux specific files ---
+.DS_Store
+*.dSYM
+
+/Content/
+/Plugins/
