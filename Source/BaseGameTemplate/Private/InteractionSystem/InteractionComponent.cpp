@@ -319,10 +319,11 @@ void UInteractionComponent::PrimaryItemInteractNotify() {
   if (!baseCharacter) {
     return;
   }
-  baseCharacter->OnPrimaryItemInteract(RightInteractingInteractable);
-  RightHandState = EPlayerHandState::HoldingPrimaryItem;
   HoldingPrimaryItemId =
       IInteractableInterface::Execute_GetItemId(RightInteractingInteractable);
+  baseCharacter->OnPrimaryItemInteract(*GetItemById(HoldingPrimaryItemId));
+
+  RightHandState = EPlayerHandState::HoldingPrimaryItem;
   RightInteractingInteractable->Destroy();
   RightInteractingInteractable = nullptr;
 }

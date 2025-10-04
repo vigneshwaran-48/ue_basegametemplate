@@ -75,7 +75,7 @@ class BASEGAMETEMPLATE_API ABaseCharacter : public ACharacter {
       class UInputComponent* PlayerInputComponent) override;
 
   UFUNCTION(BlueprintImplementableEvent, Category = "Interaction")
-  void OnPrimaryItemInteract(AActor* Interactable);
+  void OnPrimaryItemInteract(FInventoryItem Interactable);
 
   UFUNCTION(BlueprintImplementableEvent, Category = "Interaction")
   void OnPrimaryItemPutback(FInventoryItem InventoryItem);

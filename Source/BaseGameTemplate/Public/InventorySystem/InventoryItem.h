@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "InteractionSystem/InteractionData.h"
+#include "InteractionSystem/OverlayPose.h"
 #include "InventoryItem.generated.h"
 
 UENUM(BlueprintType)
@@ -45,4 +46,7 @@ struct FInventoryItem : public FTableRowBase {
 
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
   FInteractionData InteractionData;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+  EOverlayPose OverlayPose;
 };
