@@ -161,7 +161,7 @@ void UWeaponWheelComponent::SelectWeapon() {
   ToggleWheel(false);
 
   // TODO: Add logic to actually equip the weapon corresponding to
-  // CurrentSelectionIndex
+  InventorySystemComponent->EquipWeapon(CurrentSelectionIndex);
 }
 
 void UWeaponWheelComponent::AutoHideWheel() {

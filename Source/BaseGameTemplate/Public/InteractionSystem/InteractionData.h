@@ -15,6 +15,9 @@ struct FInteractionData {
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montages")
   TObjectPtr<class UAnimMontage> PutbackMontage;
 
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montages")
+  TObjectPtr<class UAnimMontage> EquipMontage;
+
   FInteractionData() : PickupMontage(nullptr), PutbackMontage(nullptr) {}
 
   FInteractionData(TObjectPtr<class UAnimMontage> InPickupMontage)
@@ -23,4 +26,11 @@ struct FInteractionData {
   FInteractionData(TObjectPtr<class UAnimMontage> InPickupMontage,
                    TObjectPtr<class UAnimMontage> InPutbackMontage)
       : PickupMontage(InPickupMontage), PutbackMontage(InPutbackMontage) {}
+
+  FInteractionData(TObjectPtr<class UAnimMontage> InPickupMontage,
+                   TObjectPtr<class UAnimMontage> InPutbackMontage,
+                   TObjectPtr<class UAnimMontage> InEquipMontage)
+      : PickupMontage(InPickupMontage),
+        PutbackMontage(InPutbackMontage),
+        EquipMontage(InEquipMontage) {}
 };

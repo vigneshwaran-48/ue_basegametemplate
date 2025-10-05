@@ -35,6 +35,11 @@ class BASEGAMETEMPLATE_API UInteractionComponent : public UActorComponent {
   UFUNCTION()
   void PutBackHoldingPrimaryItem();
 
+  UFUNCTION()
+  void EquipPrimaryItem(FInventoryItem item);
+
+  void EquipPrimaryItemNotify();
+
   FOnItemPutbackFinished OnItemPutbackFinished;
 
  protected:
@@ -88,6 +93,8 @@ class BASEGAMETEMPLATE_API UInteractionComponent : public UActorComponent {
 
   FName HoldingPrimaryItemId;
 
+  FInventoryItem EquippingItem;
+
   UFUNCTION()
   void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp,
                          AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -115,6 +122,9 @@ class BASEGAMETEMPLATE_API UInteractionComponent : public UActorComponent {
 
   UFUNCTION()
   void PickupPrimaryItem(AActor* Interactable);
+
+  UFUNCTION()
+  void HandleEquipPrimaryItem(FInventoryItem item);
 
   FInventoryItem* GetItemById(FName Id);
 

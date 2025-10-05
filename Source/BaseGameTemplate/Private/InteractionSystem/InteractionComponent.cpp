@@ -188,7 +188,15 @@ void UInteractionComponent::AddInteractionWidgetToInteractable(
     UInteractionWidget* interactionWidget =
         CreateWidget<UInteractionWidget>(GetWorld(), InteractionWidgetClass);
     interactableWidgetComponent->SetWidget(interactionWidget);
-    UTexture2D* icon = IInteractableInterface::Execute_GetIcon(Interactable);
+    FInventoryItem* item =
+        GetItemById(IInteractableInterface::Execute_GetItemId(Interactable));
+    if (!item) {
+      InteractionSystemHelpers::LogAndDisplayDebugMessage(
+          "Item is empty while getting the icon for displaying!", FColor::Red,
+          5.0f);
+      return;
+    }
+    UTexture2D* icon = item->Icon;
     if (icon) {
       interactionWidget->SetIcon(icon);
     } else {
@@ -366,6 +374,50 @@ void UInteractionComponent::PutBackHoldingPrimaryItem() {
       ->PlayAnimMontage(interactionData.PutbackMontage, 1.0f);
 }
 
+void UInteractionComponent::EquipPrimaryItem(FInventoryItem item) {
+  if (RightHandState == EPlayerHandState::PickingItem ||
+      RightHandState == EPlayerHandState::PuttingBackPrimaryItem) {
+    UE_LOG(LogTemp, Warning, TEXT("Right hand is busy"));
+    return;
+  }
+  if (RightHandState == EPlayerHandState::HoldingPrimaryItem &&
+      GetItemById(HoldingPrimaryItemId)) {
+    InteractionSystemHelpers::LogAndDisplayDebugMessage(
+        TEXT("Putting back item before picking the primary item"),
+        FColor::Green, 5.0f);
+    auto PutbackFinishedHandler = [this, item]() {
+      OnItemPutbackFinished.Remove(PendingPutbackHandle);
+      HandleEquipPrimaryItem(item);
+      PendingPutbackHandle.Reset();
+    };
+    PendingPutbackHandle =
+        OnItemPutbackFinished.AddLambda(PutbackFinishedHandler);
+    PutBackHoldingPrimaryItem();
+    return;
+  }
+  HandleEquipPrimaryItem(item);
+}
+
+void UInteractionComponent::EquipPrimaryItemNotify() {
+  if (EquippingItem.ID.IsNone()) {
+    InteractionSystemHelpers::LogAndDisplayDebugMessage(
+        TEXT("Equipping item is null!"), FColor::Red, 5.0f);
+    return;
+  }
+  ACharacter* ownerCharacter = Cast<ACharacter>(GetOwner());
+  if (!ownerCharacter) {
+    return;
+  }
+  ABaseCharacter* baseCharacter = Cast<ABaseCharacter>(ownerCharacter);
+  if (!baseCharacter) {
+    return;
+  }
+  baseCharacter->OnPrimaryItemEquip(EquippingItem);
+
+  RightHandState = EPlayerHandState::HoldingPrimaryItem;
+  EquippingItem = FInventoryItem();
+}
+
 // Utility Functions
 
 void UInteractionComponent::HandleInventoryItemPickup(AActor* Interactable) {
@@ -464,4 +516,18 @@ FInventoryItem* UInteractionComponent::GetItemById(FName Id) {
   }
   return ItemDataTable->FindRow<FInventoryItem>(
       Id, TEXT("ItemID not found in DataTable"));
+}
+
+void UInteractionComponent::HandleEquipPrimaryItem(FInventoryItem item) {
+  FInteractionData interactionData = item.InteractionData;
+  if (!interactionData.EquipMontage) {
+    InteractionSystemHelpers::LogAndDisplayDebugMessage(
+        TEXT("Equip montage is not present in interaction data"), FColor::Green,
+        5.0f);
+    return;
+  }
+  RightHandState = EPlayerHandState::PickingItem;
+  EquippingItem = item;
+  Cast<ACharacter>(GetOwner())
+      ->PlayAnimMontage(interactionData.EquipMontage, 1.0f);
 }

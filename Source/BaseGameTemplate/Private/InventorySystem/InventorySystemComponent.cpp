@@ -2,6 +2,7 @@
 
 #include "InventorySystem/InventorySystemComponent.h"
 
+#include "InteractionSystem/InteractionComponent.h"
 #include "InventorySystem/InventoryItem.h"
 
 // Sets default values for this component's properties
@@ -18,7 +19,22 @@ UInventorySystemComponent::UInventorySystemComponent() {
 void UInventorySystemComponent::BeginPlay() {
   Super::BeginPlay();
 
-  // ...
+  AActor* OwnerActor = GetOwner();
+
+  if (OwnerActor) {
+    InteractionComponent =
+        OwnerActor->GetComponentByClass<UInteractionComponent>();
+    if (InteractionComponent) {
+      UE_LOG(LogTemp, Log,
+             TEXT("InventoryComponent successfully found "
+                  "InteractionComponent."));
+    } else {
+      UE_LOG(LogTemp, Error,
+             TEXT("InventoryComponent could not find "
+                  "InteractionComponent on its owner (%s)."),
+             *OwnerActor->GetName());
+    }
+  }
 }
 
 // Called every frame
@@ -81,4 +97,14 @@ TArray<FInventoryItem> UInventorySystemComponent::GetWeapons() const {
     }
   }
   return Weapons;
+}
+
+void UInventorySystemComponent::EquipWeapon(int weaponSlotIndex) {
+  TArray<FInventoryItem> weapons = GetWeapons();
+  if (weaponSlotIndex < 0 || weaponSlotIndex >= weapons.Num()) {
+    UE_LOG(LogTemp, Warning, TEXT("Invalid weapon slot index"));
+    return;
+  }
+  FInventoryItem& weaponToEquip = weapons[weaponSlotIndex];
+  InteractionComponent->EquipPrimaryItem(weaponToEquip);
 }

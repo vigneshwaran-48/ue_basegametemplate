@@ -79,4 +79,7 @@ class BASEGAMETEMPLATE_API ABaseCharacter : public ACharacter {
 
   UFUNCTION(BlueprintImplementableEvent, Category = "Interaction")
   void OnPrimaryItemPutback(FInventoryItem InventoryItem);
+
+  UFUNCTION(BlueprintImplementableEvent, Category = "Interaction")
+  void OnPrimaryItemEquip(FInventoryItem InventoryItem);
 };

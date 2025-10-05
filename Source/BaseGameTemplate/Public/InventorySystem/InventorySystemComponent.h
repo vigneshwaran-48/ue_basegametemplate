@@ -38,9 +38,15 @@ class BASEGAMETEMPLATE_API UInventorySystemComponent : public UActorComponent {
   UFUNCTION(BlueprintCallable, Category = "Inventory")
   bool IsSpaceAvailableForItem(FInventoryItem Item, int32 Quantity);
 
+  UFUNCTION(BlueprintCallable, Category = "Inventory")
+  void EquipWeapon(int weaponSlotIndex);
+
  protected:
   // Called when the game starts
   virtual void BeginPlay() override;
+
+  class UInteractionComponent* InteractionComponent;
+
 
  public:
   // Called every frame
