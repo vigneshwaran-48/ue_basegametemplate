@@ -133,7 +133,5 @@ void ABaseCharacter::HandleWheelNavigation(const FInputActionValue& Value) {
 void ABaseCharacter::HandleToggleWeaponHold() {
   // Need to handle actual toggling of holding state in future. Currently only
   // putting back the weapon.
-  if (InteractionComponent) {
-    InteractionComponent->PutBackHoldingPrimaryItem();
-  }
+  OnToggleWeaponHold.Broadcast();
 }

@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnToggleWeaponHold);
+
 UCLASS()
 class BASEGAMETEMPLATE_API ABaseCharacter : public ACharacter {
   GENERATED_BODY()
@@ -82,4 +84,6 @@ class BASEGAMETEMPLATE_API ABaseCharacter : public ACharacter {
 
   UFUNCTION(BlueprintImplementableEvent, Category = "Interaction")
   void OnPrimaryItemEquip(FInventoryItem InventoryItem);
+
+  FOnToggleWeaponHold OnToggleWeaponHold;
 };

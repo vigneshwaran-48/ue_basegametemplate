@@ -41,6 +41,22 @@ void UInteractionComponent::BeginPlay() {
       this, &UInteractionComponent::OnBoxBeginOverlap);
   interactionCollision->OnComponentEndOverlap.AddDynamic(
       this, &UInteractionComponent::OnBoxEndOverlap);
+
+  // Registering Events
+  if (ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner())) {
+    character->OnToggleWeaponHold.AddDynamic(
+        this, &UInteractionComponent::PutBackHoldingPrimaryItem);
+  }
+}
+
+void UInteractionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+  Super::EndPlay(EndPlayReason);
+
+  // UnRegistering Events
+  if (ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner())) {
+    character->OnToggleWeaponHold.RemoveDynamic(
+        this, &UInteractionComponent::PutBackHoldingPrimaryItem);
+  }
 }
 
 void UInteractionComponent::TickComponent(
@@ -371,7 +387,7 @@ void UInteractionComponent::PutBackHoldingPrimaryItem() {
   RightHandState = EPlayerHandState::PuttingBackPrimaryItem;
 
   Cast<ACharacter>(GetOwner())
-      ->PlayAnimMontage(interactionData.PutbackMontage, 1.0f);
+      ->PlayAnimMontage(interactionData.PutbackMontage, 2.0f);
 }
 
 void UInteractionComponent::EquipPrimaryItem(FInventoryItem item) {

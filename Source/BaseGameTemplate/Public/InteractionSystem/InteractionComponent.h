@@ -46,6 +46,8 @@ class BASEGAMETEMPLATE_API UInteractionComponent : public UActorComponent {
   // Called when the game starts
   virtual void BeginPlay() override;
 
+  virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite,
             Category = "Interaction System")
   EInteractionState InteractionState = EInteractionState::None;
